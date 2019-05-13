@@ -24,3 +24,26 @@
  * `DesignEditor` 是所有编辑组件的基类，这个类提供了一些常用的方法（例如 `onChange` 事件的处理函数），
  * 在子类里面可以直接使用。
  */
+<template>
+    <div></div>
+</template>
+<script>
+import {
+  assign,
+  find,
+  findIndex,
+  isEmpty,
+  isUndefined,
+  defaultTo,
+  isFunction,
+} from 'lodash';
+import * as storage from 'zent/es/utils/storage'
+import uuid from './utils/uuid';
+
+export default {
+    data () {
+        return {}
+    }
+}
+</script>
+
