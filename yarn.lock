@@ -6865,6 +6865,11 @@ slice-ansi@^2.1.0:
     astral-regex "^1.0.0"
     is-fullwidth-code-point "^2.0.0"
 
+smooth-dnd@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/smooth-dnd/-/smooth-dnd-0.12.0.tgz#6d293ebbb653596cb1f439d913c20be216731f6b"
+  integrity sha512-w+/YW1TFram8FW/bYiirRcAGSIdVVjxFRtCBqJ2fkEJpm28zwbdMyXVQCralBUTITMjZp6VHGQJ73UTSIER1lA==
+
 snapdragon-node@^2.0.1:
   version "2.1.1"
   resolved "https://registry.npm.taobao.org/snapdragon-node/download/snapdragon-node-2.1.1.tgz#6c175f86ff14bdb0724563e8f3c1b021a286853b"
@@ -7693,12 +7698,7 @@ utils-merge@1.0.1:
   resolved "https://registry.npm.taobao.org/utils-merge/download/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-uuid@^3.0.1:
-  version "3.3.2"
-  resolved "https://registry.npm.taobao.org/uuid/download/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
-  integrity sha1-G0r0lV6zB3xQHCOHL8ZROBFYcTE=
-
-uuid@^3.3.2:
+uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
@@ -7776,6 +7776,13 @@ vue-loader@^15.7.0:
     loader-utils "^1.1.0"
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
+
+vue-smooth-dnd@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/vue-smooth-dnd/-/vue-smooth-dnd-0.8.0.tgz#bfa73e2b6fd5231f798ea8fce53cea8ec5e72315"
+  integrity sha512-9dZ+DYsFVs8GqAnjoTmSwLOjXNENIbNOnulx3YOs94nHG90WTKTguQfunV9NBgX+ETtb6cHspZXzfPZOHY5vbg==
+  dependencies:
+    smooth-dnd "^0.12.0"
 
 vue-style-loader@^4.1.0:
   version "4.1.2"
