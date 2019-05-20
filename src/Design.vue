@@ -25,7 +25,7 @@
  * 在子类里面可以直接使用。
  */
 <template>
-    <div></div>
+    <div :class="[`${prefix}-design`, className]"></div>
 </template>
 <script>
 import {
@@ -41,6 +41,9 @@ import * as storage from 'zent/es/utils/storage'
 import uuid from './utils/uuid';
 
 export default {
+    props: {
+        components: Array
+    },
     data () {
         return {}
     }

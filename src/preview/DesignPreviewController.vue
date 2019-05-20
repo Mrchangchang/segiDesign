@@ -11,11 +11,41 @@
         :class="`${prefix}-design-preview-controller__drag-handle`"
       >
         <slot :slot-scope="{...previewProps,value, design, globalConfig, settings}"></slot>
-        {{provided.placeholder}}
+      </div>
+      {{provided.placeholder}}
+      <div v-if="configurable && canDelete">
+        删除组件
+        <button>删除</button>
+      </div>
+      <div v-if="showButtons && canInsert">
+        插入一个组件之前
+        <button @click="onPrepend">添加</button>
+      </div>
+      <div v-if="showButtons && canInsert ">
+        插入一个组件在之后
+        <button @click="onAppend">添加</button>
       </div>
     </div>
   </Draggable>
-  <div v-else></div>
+  <div v-else @click="onSelect" :class="getClassName(highlightWhenSelect)">
+    <div
+      :class="[`${prefix}-design-preview-controller__drag-handle`, `${prefix}-design-preview-controller__drag-handle--inactive`]"
+    >
+      <slot :slot-scope="{...previewProps,value, design, globalConfig, settings}"></slot>
+    </div>
+    <div v-if="configurable && canDelete">
+      删除组件
+      <button>删除</button>
+    </div>
+    <div v-if="showButtons && canInsert">
+      插入一个组件之前
+      <button @click="onPrepend">添加</button>
+    </div>
+    <div v-if="showButtons && canInsert ">
+      插入一个组件在之后
+      <button @click="onAppend">添加</button>
+    </div>
+  </div>
 </template>
 <script>
 import { Container, Draggable } from "vue-smooth-dnd";
@@ -97,6 +127,33 @@ export default {
         [`${prefix}-design-preview-controller--dragable`]: this.dragable
       };
     }
+  },
+  onSelect(evt) {
+    const { editable } = this.props;
+    if (!editable) return;
+    this.invokeCallback("onSelect", evt, false);
+  },
+  onPrepend() {
+    this.invokeCallback("onAdd", evt, true, ADD_COMPONENT_OVERLAY_POSITION.TOP);
+  },
+  onAppend() {
+    this.invokeCallback(
+      "onAdd",
+      evt,
+      true,
+      ADD_COMPONENT_OVERLAY_POSITION.BOTTOM
+    );
+  },
+  onDelete() {
+    this.invokeCallback("onDelete", null, true);
+  },
+  invokeCallback(action, evt, stopPropagation, ...args) {
+    if (stopPropagation && avt) {
+      evt.stopPropagation();
+    }
+    const { value } = this.props;
+    const cb = this.props[action];
+    cb && cb(value, ...args);
   }
 };
 </script>
