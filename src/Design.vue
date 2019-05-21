@@ -25,7 +25,7 @@
  * 在子类里面可以直接使用。
  */
 <template>
-    <div :class="[`${prefix}-design`, className]"></div>
+  <div :class="[`${prefix}-design`, className]"></div>
 </template>
 <script>
 import {
@@ -35,18 +35,103 @@ import {
   isEmpty,
   isUndefined,
   defaultTo,
-  isFunction,
-} from 'lodash';
-import * as storage from 'zent/es/utils/storage'
-import uuid from './utils/uuid';
-
-export default {
-    props: {
-        components: Array
-    },
-    data () {
-        return {}
-    }
+  isFunction
+} from "lodash";
+import * as storage from "zent/es/utils/storage";
+import uuid from "./utils/uuid";
+import { Alert } from "ant-design-vue";
+class Component {
+  constructor() {}
 }
+const UUID_KEY = "__zent-design-uuid__";
+const CACHE_KEY = "__zent-design-cache-storage__";
+export default {
+  components: {
+    Alert
+  },
+  props: {
+    components: {
+      type: Array,
+      validator(value) {
+        if (value) {
+          value.every(v => v instanceof Component);
+        } else {
+          return false;
+        }
+      }
+    },
+    value: {
+        type: Array,
+        default: () => []
+    },
+    // Design 组件通用的全局设置
+    settings: Object,
+    // 默认选中的组件下标
+    defaultSelectedIndex: {
+        type: Number,
+        default: -1
+    },
+    // onChange(value: object)
+    onChange: Function,
+    // 用来渲染整个 Design 组件
+    preview: Function,
+    // 预览部分底部的额外信息
+    previewFooter: Object,
+    // 有未保存数据关闭窗口时需要用户确认
+    // 离开时的确认文案新版本的浏览器是不能自定义的
+    confirmUnsavedLeave: {
+        type: Boolean,
+        default: true
+    },
+    // 是否将未保存的数据暂存到 localStorage 中
+    // 下次打开时如果有未保存的数据会提示从 localStorage 中恢复
+    // 这个 props 不支持动态修改，只会在 mount 的时候检查一次状态
+    cache: {
+        type: Boolean,
+        default: false 
+    },
+    // Design 实例的缓存 id，根据这个 id 识别缓存
+    cacheId: String,
+    // 恢复缓存时的提示文案
+    cacheRestoreMessage: {
+        type: String,
+        default: '提示：在浏览器中发现未提交的内容，是否使用该内容替换当前内容？'
+    },
+    // 是否禁用编辑功能
+    // 开启后，会忽略 components 里面的 editable 设置，全部不可编辑
+    disabled: Boolean,
+    // 一些用户自定义的全局配置
+    globalConfig: {
+        type: Object,
+        default: () => Object
+    },
+    // 滚动到顶部时的偏移量
+    scrollTopOffset: {
+        type: [Number, Function],
+        default: -10
+    },
+    // 滚动到左侧时的偏移量
+    scrollLeftOffset: {
+        type: [Number, Function],
+        default: -10
+    },
+    children: Object,
+    className: String,
+    prefix: {
+        type: String,
+        default: 'segi'
+    }
+  },
+  data() {
+    return {
+      selectedUUID
+    };
+  },
+  methods: {
+    getUUIDFromValue(value) {
+      return value && value[UUID_KEY];
+    }
+  }
+};
 </script>
 
