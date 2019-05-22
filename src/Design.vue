@@ -45,6 +45,40 @@ class Component {
 }
 const UUID_KEY = "__zent-design-uuid__";
 const CACHE_KEY = "__zent-design-cache-storage__";
+
+function tagValuesWithUUID(values) {
+  values.forEach(v => {
+    if (!v[UUID_KEY]) {
+      v[UUID_KEY] = uuid();
+    }
+  });
+}
+
+function getSafeSelectedValueIndex(index, value) {
+  return Math.min(index, value.length - 1);
+}
+
+
+/**
+ * 根据当前的值生成一个组件使用计数
+ * @param {Array} value Design 当前的值
+ * @param {Array} components Design 支持的组件列表
+ */
+function makeInstanceCountMapFromValue(value, components) {
+  const instanceCountMap = new LazyMap(0);
+
+  (value || []).forEach(val => {
+    const comp = find(components, c => isExpectedDesignType(c, val.type));
+    instanceCountMap.inc(serializeDesignType(comp.type));
+  });
+
+  return instanceCountMap;
+}
+
+const safeValueIndex = getSafeSelectedValueIndex(defaultSelectedIndex, value);
+
+const selectedValue = value[safeValueIndex];
+
 export default {
   components: {
     Alert
@@ -61,15 +95,15 @@ export default {
       }
     },
     value: {
-        type: Array,
-        default: () => []
+      type: Array,
+      default: () => []
     },
     // Design 组件通用的全局设置
     settings: Object,
     // 默认选中的组件下标
     defaultSelectedIndex: {
-        type: Number,
-        default: -1
+      type: Number,
+      default: -1
     },
     // onChange(value: object)
     onChange: Function,
@@ -80,56 +114,109 @@ export default {
     // 有未保存数据关闭窗口时需要用户确认
     // 离开时的确认文案新版本的浏览器是不能自定义的
     confirmUnsavedLeave: {
-        type: Boolean,
-        default: true
+      type: Boolean,
+      default: true
     },
     // 是否将未保存的数据暂存到 localStorage 中
     // 下次打开时如果有未保存的数据会提示从 localStorage 中恢复
     // 这个 props 不支持动态修改，只会在 mount 的时候检查一次状态
     cache: {
-        type: Boolean,
-        default: false 
+      type: Boolean,
+      default: false
     },
     // Design 实例的缓存 id，根据这个 id 识别缓存
     cacheId: String,
     // 恢复缓存时的提示文案
     cacheRestoreMessage: {
-        type: String,
-        default: '提示：在浏览器中发现未提交的内容，是否使用该内容替换当前内容？'
+      type: String,
+      default: "提示：在浏览器中发现未提交的内容，是否使用该内容替换当前内容？"
     },
     // 是否禁用编辑功能
     // 开启后，会忽略 components 里面的 editable 设置，全部不可编辑
     disabled: Boolean,
     // 一些用户自定义的全局配置
     globalConfig: {
-        type: Object,
-        default: () => Object
+      type: Object,
+      default: () => Object
     },
     // 滚动到顶部时的偏移量
     scrollTopOffset: {
-        type: [Number, Function],
-        default: -10
+      type: [Number, Function],
+      default: -10
     },
     // 滚动到左侧时的偏移量
     scrollLeftOffset: {
-        type: [Number, Function],
-        default: -10
+      type: [Number, Function],
+      default: -10
     },
     children: Object,
     className: String,
     prefix: {
-        type: String,
-        default: 'segi'
+      type: String,
+      default: "segi"
     }
   },
   data() {
     return {
-      selectedUUID
+      // 当前选中的组件对应的 UUID
+      selectedUUID: '',
+      // 外面没传的时候用 state 上的 settings
+      settings: {},
+       // 是否显示添加组件的浮层
+      showAddComponentOverlay: false,
+       // 是否显示添加组件的浮层
+      showAddComponentOverlay: false,
+      // 添加组件浮层的位置
+      addComponentOverlayPosition: ADD_COMPONENT_OVERLAY_POSITION.UNKNOWN,
+
+      // 可添加的组件列表
+      appendableComponents: [],
+
+      // 当前所有组件的 validation 信息
+      // key 是 value 的 UUID
+      validations: {},
+
+      // 是否强制显示错误
+      showError: false,
+
+      // 是否显示从缓存中恢复的提示
+      showRestoreFromCache: false,
+
+      // 当 preview 很长时，为了对齐 preview 底部需要的额外空间
+      bottomGap: 0,
     };
+  },
+  computed: {
+    // 当前选中的组件对应的 UUID
+    selectedUUID() {
+      const safeValueIndex = getSafeSelectedValueIndex(
+        this.defaultSelectedIndex,
+        this.value
+      );
+      const selectedValue = value[safeValueIndex]
+      return this.getUUIDFromValue(selectedValue)
+    },
+    // 每个组件当前已经添加的个数
+    componentInstanceCount () {
+      makeInstanceCountMapFromValue(this.value, this.components)
+    }
+    
+  },
+  created () {
+    this.validateCacheProps(this.$props)
+    tagValuesWithUUID(this.value)
   },
   methods: {
     getUUIDFromValue(value) {
       return value && value[UUID_KEY];
+    }
+  },
+  // 缓存相关的函数
+  validateCacheProps (props) {
+    props = props || this.props;
+    const { cache, cacheId } = props;
+    if (cache && !cacheId) {
+      throw new Error('Design: cacheId is required when cache is on');
     }
   }
 };
