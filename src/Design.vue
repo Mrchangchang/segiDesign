@@ -25,7 +25,34 @@
  * 在子类里面可以直接使用。
  */
 <template>
-  <div :class="[`${prefix}-design`, className]"></div>
+  <div :class="[`${prefix}-design`, className]" :style="{ paddingBottom: bottomGap }">
+    <Alert :class="`${prefix}-design__restore-cache-alert`" @click.native="restoreCache" banner :message="cacheRestoreMessage" closable @close="onRestoreCacheAlertClose">
+      <DesignPreview :prefix="prefix"
+       :components="components" 
+       :value="value"
+       :validations="validations"
+       :showError="showError"
+       :settings="settings || managedSettings"
+       :onSettingsChange="onSettingsChange"
+       :footer="previewFooter"
+       :componentInstanceCount="componentInstanceCount"
+       :onComponentValueChange="onComponentValueChange"
+       :onAddComponent="onAdd"
+       :appendableComponents="appendableComponents"
+       :selectedUUID="selectedUUID"
+       :getUUIDFromValue="getUUIDFromValue"
+       :showAddComponentOverlay="showAddComponentOverlay"
+       :addComponentOverlayPosition="onShowAddComponentOverlay"
+       :onShowEditComponentOverlay="onShowEditComponentOverlay",
+       :onSelect="onSelect"
+       :onMove="onMove"
+       :onDelete="onDelete"
+       :globalConfig="globalConfig"
+       :disabled="{}"
+       ref="savePreview"
+      > </DesignPreview>
+    </Alert>
+  </div>
 </template>
 <script>
 import {
@@ -40,6 +67,7 @@ import {
 import * as storage from "zent/es/utils/storage";
 import uuid from "./utils/uuid";
 import { Alert } from "ant-design-vue";
+import DesignPreview from './preview/DesignPreview'
 class Component {
   constructor() {}
 }
@@ -81,7 +109,7 @@ const selectedValue = value[safeValueIndex];
 
 export default {
   components: {
-    Alert
+    Alert,DesignPreview
   },
   props: {
     components: {
