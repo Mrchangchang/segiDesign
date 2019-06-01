@@ -1,5 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
+import vcolorpicker from 'vcolorpicker'
+
+Vue.use(vcolorpicker)
+
 
 Vue.config.productionTip = false
 

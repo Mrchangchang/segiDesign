@@ -1,12 +1,15 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" >
+    <AddPage/>
   </div>
 </template>
 
 <script>
-
+import AddPage from './views/AddPage'
 export default {
+  components: {
+    AddPage
+  },
   name: 'app'
 }
 </script>
