@@ -73,7 +73,7 @@ import {
   defaultTo,
   isFunction
 } from "lodash";
-import * as storage from "zent/es/utils/storage";
+import * as storage from "./utils/storage";
 import uuid from "./utils/uuid";
 import { Alert } from "ant-design-vue";
 import DesignPreview from "./preview/DesignPreview";
@@ -84,33 +84,6 @@ class Component {
 const UUID_KEY = "__zent-design-uuid__";
 const CACHE_KEY = "__zent-design-cache-storage__";
 
-function tagValuesWithUUID(values) {
-  values.forEach(v => {
-    if (!v[UUID_KEY]) {
-      v[UUID_KEY] = uuid();
-    }
-  });
-}
-
-function getSafeSelectedValueIndex(index, value) {
-  return Math.min(index, value.length - 1);
-}
-
-/**
- * 根据当前的值生成一个组件使用计数
- * @param {Array} value Design 当前的值
- * @param {Array} components Design 支持的组件列表
- */
-function makeInstanceCountMapFromValue(value, components) {
-  const instanceCountMap = new LazyMap(0);
-
-  (value || []).forEach(val => {
-    const comp = find(components, c => isExpectedDesignType(c, val.type));
-    instanceCountMap.inc(serializeDesignType(comp.type));
-  });
-
-  return instanceCountMap;
-}
 
 function tagValuesWithUUID(values) {
   values.forEach(v => {
@@ -176,9 +149,7 @@ function getSafeSelectedValueIndex(index, value) {
   return Math.min(index, value.length - 1);
 }
 
-const safeValueIndex = getSafeSelectedValueIndex(defaultSelectedIndex, value);
 
-const selectedValue = value[safeValueIndex];
 
 export default {
   components: {
@@ -256,6 +227,10 @@ export default {
     prefix: {
       type: String,
       default: "segi"
+    },
+    defaultSelectedIndex: {
+      type: Number,
+      default: -1
     }
   },
   data() {
@@ -285,7 +260,7 @@ export default {
       showRestoreFromCache: false,
 
       // 当 preview 很长时，为了对齐 preview 底部需要的额外空间
-      bottomGap: 0
+      bottomGap: 0,
     };
   },
   computed: {
@@ -306,6 +281,9 @@ export default {
   created() {
     this.validateCacheProps(this.$props);
     tagValuesWithUUID(this.value);
+//     this.safeValueIndex = getSafeSelectedValueIndex(this.defaultSelectedIndex, value);
+
+// this.selectedValue = value[this.safeValueIndex];
   },
   methods: {
     getUUIDFromValue(value) {
@@ -536,7 +514,7 @@ export default {
       }
       this.trackValueChange(newValue)
     },
-    setValidation = validation => {
+    setValidation: validation => {
       this.$set(
         this,
         validations,

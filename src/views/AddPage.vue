@@ -6,7 +6,6 @@ import Design from '../design/index'
 import ConfigEditor from "../components/config/ConfigEditor";
 import configConf from "../components/config/index";
 
-
 const components = [
   Object.assign({}, configConf, {
     // 是否可以拖拽
