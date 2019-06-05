@@ -78,6 +78,14 @@ import uuid from "./utils/uuid";
 import { Alert } from "ant-design-vue";
 import DesignPreview from "./preview/DesignPreview";
 import { Promise } from 'q';
+import { ADD_COMPONENT_OVERLAY_POSITION } from './constants';
+import LazyMap from './utils/LazyMap';
+import {
+  getDesignType,
+  isExpectedDesignType,
+  serializeDesignType,
+} from './utils/design-type';
+
 class Component {
   constructor() {}
 }
@@ -159,20 +167,17 @@ export default {
   props: {
     components: {
       type: Array,
-      validator(value) {
-        if (value) {
-          value.every(v => v instanceof Component);
-        } else {
-          return false;
-        }
-      }
+      default: () => []
     },
     value: {
       type: Array,
       default: () => []
     },
     // Design 组件通用的全局设置
-    settings: Object,
+    settings: {
+      type: Object,
+      default: {}
+    },
     // 默认选中的组件下标
     defaultSelectedIndex: {
       type: Number,
@@ -236,9 +241,9 @@ export default {
   data() {
     return {
       // 当前选中的组件对应的 UUID
-      selectedUUID: "",
+      // selectedUUID: "",
       // 外面没传的时候用 state 上的 settings
-      settings: {},
+      // settings: {},
       // 是否显示添加组件的浮层
       showAddComponentOverlay: false,
       // 是否显示添加组件的浮层
@@ -270,7 +275,7 @@ export default {
         this.defaultSelectedIndex,
         this.value
       );
-      const selectedValue = value[safeValueIndex];
+      const selectedValue = this.value[safeValueIndex];
       return this.getUUIDFromValue(selectedValue);
     },
     // 每个组件当前已经添加的个数
@@ -287,7 +292,7 @@ export default {
   },
   methods: {
     getUUIDFromValue(value) {
-      return value && value[UUID_KEY];
+      return this.value && this.value[UUID_KEY];
     },
     // 缓存相关的函数
     validateCacheProps(props) {
@@ -617,9 +622,9 @@ export default {
       const { selectedUUID } = this
       return !!selectedUUID
     },
-    getUUIDFromValue () {
-      return value && value[UUID_KEY]
-    },
+    // getUUIDFromValue () {
+    //   return value && value[UUID_KEY]
+    // },
     setUUIDForValue (value, id) {
       if (value) {
         value[UUID_KEY] = id;

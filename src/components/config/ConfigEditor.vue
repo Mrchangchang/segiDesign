@@ -43,6 +43,18 @@ import { Promise } from 'q';
 export default {
   designType: "config", // 静态属性
   designDescription: "页面配置",
+  getInitialValue() {
+    return {
+        // 标题
+        title: "微页面标题",
+
+        //  背景颜色
+        color: "",
+
+        // 页面描述
+        description: ""
+      };
+  },
   extends: DesigEditor,
   components: {
     ControlGroup,
@@ -71,18 +83,6 @@ export default {
       this.onBackgroundChange(DEFAULT_BACKGROUND);
     },
     filterTag: (item, keyword) => item.text.indexOf(keyword) > -1,
-    getInitialValue() {
-      return {
-        // 标题
-        title: "微页面标题",
-
-        //  背景颜色
-        color: "",
-
-        // 页面描述
-        description: ""
-      };
-    },
     validate(value) {
       return new Promise(resolve => {
         const errors = {}

@@ -1,10 +1,23 @@
 <template>
-  <div>新增微页面</div>
+  <div>
+    <h4>新增微页面</h4>
+    <Design :cache="true" 
+    cacheId="zent-design-test"
+    :confirmUnsavedLeave="false"
+    :components="grouped ? groupedComponents : components"
+    :value="value"
+    :onChange="onChange"
+    :settings="settings"
+    :onSettingsChange="onSettingsChange"
+    :scrollTopOffset="-270"
+    :globalConfig="global"/>
+  </div>
 </template>
 <script>
 import Design from '../design/index'
 import ConfigEditor from "../components/config/ConfigEditor";
 import configConf from "../components/config/index";
+import { type } from 'os';
 
 const components = [
   Object.assign({}, configConf, {
@@ -29,16 +42,41 @@ const groupedComponents = [
     // editable: true,
     configurable: false,
     highlightWhenSelect: false
-  })
-  
+  }),
+  Design.group('基础')
 ]
-console.info(ConfigEditor)
+console.info(groupedComponents)
 export default {
   components: {
-    ConfigEditor
+    ConfigEditor, Design
   },
   data() {
-    return {};
+    return {
+      grouped: true,
+      value: [
+        {
+          type: configConf.type,
+          ...ConfigEditor.getInitialValue()
+        }
+      ],
+      settings: {
+
+      },
+      global: window._global || {},
+      groupedComponents,
+      components
+    };
+  },
+  methods: {
+    onChange(newValue) {
+      this.value = newValue
+    },
+    onSettingsChange (newSettings) {
+      this.settings = newSettings
+    },
+    switchMode() {
+      this.grouped = !this.grouped
+    }
   }
 };
 </script>

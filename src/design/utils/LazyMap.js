@@ -10,7 +10,7 @@ export default class LazyMap {
         this.defaultValue = defaultValue
         this.map = map
     }
-    getKey(key) {
+    get(key) {
         if(has(this.map, key)) {
             return this.map[key]
         }
