@@ -2,17 +2,14 @@
   <Container @drop="dispatchDragEnd">
     <div
       :class="[`${prefix}-design-preview`, className]"
-      :style="get(
+      :style="{background: get(
               settings,
               'previewBackground',
-              DEFAULT_BACKGROUND
-            )"
+              '#f9f9f9'
+            )}"
     >
       <div :class="`${prefix}-design__disabled-mask`" v-if="disabled">
       </div>
-      <!-- <Droppable :group-name="DND_PREVIEW_CONTROLLER" v-for="(item, index) in value" :key="index">
-
-      </Droppable> -->
     </div>
   </Container>
 </template>
@@ -81,7 +78,10 @@ export default {
     };
   },
   methods: {
-    get
+    get,
+    dispatchDragEnd() {
+
+    }
   }
 };
 </script>

@@ -33,7 +33,7 @@
       :message="cacheRestoreMessage"
       closable
       @close="onRestoreCacheAlertClose"
-    >
+    />
       <DesignPreview
         :prefix="prefix"
         :components="components"
@@ -50,17 +50,15 @@
         :selectedUUID="selectedUUID"
         :getUUIDFromValue="getUUIDFromValue"
         :showAddComponentOverlay="showAddComponentOverlay"
-        :addComponentOverlayPosition="onShowAddComponentOverlay"
-        :onShowEditComponentOverlay="onShowEditComponentOverlay"
-        ,
+        :onAdd="onShowAddComponentOverlay"
+        :onEdit="onShowEditComponentOverlay"
         :onSelect="onSelect"
         :onMove="onMove"
         :onDelete="onDelete"
         :globalConfig="globalConfig"
-        :disabled="{}"
+        :disabled="disabled"
         ref="savePreview"
       ></DesignPreview>
-    </Alert>
   </div>
 </template>
 <script>
