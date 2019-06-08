@@ -14,6 +14,7 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
 import Design from '../design/index'
 import ConfigEditor from "../components/config/ConfigEditor";
 import configConf from "../components/config/index";
@@ -45,10 +46,12 @@ const groupedComponents = [
   }),
   Design.group('基础')
 ]
-console.info(groupedComponents)
+
+Vue.component(ConfigEditor.name, ConfigEditor) // 全局注册
+
 export default {
   components: {
-    ConfigEditor, Design
+    Design
   },
   data() {
     return {

@@ -8,7 +8,17 @@
               '#f9f9f9'
             )}"
     >
-      <div :class="`${prefix}-design__disabled-mask`" v-if="disabled">
+      <div :class="`${prefix}-design__disabled-mask`" v-if="disabled"></div>
+      <div :class="`${prefix}-design-preview-list`">
+        <div :class="[`${prefix}-design__item-list`, !hasAppendableComponent ?`${prefix}-design__item-list--full-height`:'']">
+          <component :is="findCom(v).preview.name" v-for="v in value" :key="getUUIDFromValue(v)" :id="getUUIDFromValue(v)" :ref="savePreviewItem(getUUIDFromValue(v))">
+            <DesignPreviewController :value="v" :globalConfig="globalConfig" :settings="settings" 
+            :design="design" :id="getUUIDFromValue(v)" :index="draggable ? draggableIndex++ : -1"
+            :allowHoverEffects="!isDraggingOver" :dragable="dragable">
+
+            </DesignPreviewController>
+          </component>
+        </div>
       </div>
     </div>
   </Container>
@@ -33,7 +43,7 @@ import { ADD_COMPONENT_OVERLAY_POSITION } from "../constants";
  */
 export default {
   name: "DesignPreview",
-  components: { Container, Draggable },
+  components: { Container, Draggable, DesignPreviewItem, DesignPreviewController },
   props: {
     className: String,
     prefix: {
@@ -81,6 +91,15 @@ export default {
     get,
     dispatchDragEnd() {
 
+    },
+    defaultTo,
+    findCom(v) {
+      let valueType = v.type
+      if(this.components.length) {
+        find(this.commponents, c => {
+          return isExpectedDesignType(c, valueType)
+        })
+      }
     }
   }
 };
