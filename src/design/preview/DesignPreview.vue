@@ -11,13 +11,38 @@
       <div :class="`${prefix}-design__disabled-mask`" v-if="disabled"></div>
       <div :class="`${prefix}-design-preview-list`">
         <div :class="[`${prefix}-design__item-list`, !hasAppendableComponent ?`${prefix}-design__item-list--full-height`:'']">
-          <component :is="findCom(v).preview.name" v-for="v in value" :key="getUUIDFromValue(v)" :id="getUUIDFromValue(v)" :ref="savePreviewItem(getUUIDFromValue(v))">
+          <DesignPreviewItem v-for="v in value" :key="getUUIDFromValue(v)" :id="getUUIDFromValue(v)" 
+          :ref="savePreviewItem(getUUIDFromValue(v))">
             <DesignPreviewController :value="v" :globalConfig="globalConfig" :settings="settings" 
-            :design="design" :id="getUUIDFromValue(v)" :index="draggable ? draggableIndex++ : -1"
-            :allowHoverEffects="!isDraggingOver" :dragable="dragable">
-
+            :design="design" :id="getUUIDFromValue(v)" :index="defaultTo(findCom(v).dragable, true) ? draggableIndex++ : -1"
+            :allowHoverEffects="!isDraggingOver" :dragable="dragable" 
+            :editable="defaultTo(findCom(v).editable, true)" 
+            :configurable="defaultTo(findCom(v).configurable, true)"
+            :canDelete="defaultTo(findCom(v).canDelete, true)"
+            :canInsert="defaultTo(findCom(v).canInsert, true)"
+            :highlightWhenSelect="defaultTo(findCom(v).highlightWhenSelect, true)"
+            :isSelected="getUUIDFromValue(v) === selectedUUID"
+            :onSelect="onSelect"
+            :onDelete="onDelete"
+            :onEdit="onEdit"
+            :onAdd="onAdd"
+            :onMove="onMove"
+            :component="findCom(v).preview"
+            :previewProps="getAdditionalProps(findCom(v).previewProps, v)">
             </DesignPreviewController>
-          </component>
+            <DesignEditorItem v-if="getUUIDFromValue(v) === selectedUUID && !showAddComponentOverlay"
+            :ref="savePreviewItem(getUUIDFromValue(v))"
+            :prefix="prefix"
+            :class="[`${prefix}-design-add-component-overlay`,
+             addComponentOverlayPosition === ADD_COMPONENT_OVERLAY_POSITION.TOP? `${prefix}-design-add-component-overlay--top`:''
+             ,addComponentOverlayPosition===ADD_COMPONENT_OVERLAY_POSITION.BOTTOM?`${prefix}-design-add-component-overlay--bottom`:''
+             ,isComponentsGrouped?`${prefix}-design-add-component-overlay--grouped`:`${prefix}-design-add-component-overlay--mixed`]">
+              <DesignEditorAddComponent :prefix="prefix" 
+              :fromSelected="fromSelected" :componentInstanceCount="componentInstanceCount"
+              :designComponents="designComponents"
+              :onAddComponent="onAddComponent"/>
+            </DesignEditorItem>
+          </DesignPreviewItem>
         </div>
       </div>
     </div>
@@ -41,9 +66,16 @@ import { ADD_COMPONENT_OVERLAY_POSITION } from "../constants";
  *
  * 这个组件里的一些 props 是需要 config 组件提供的
  */
+function saveRef(map, id, instance) {
+  if (!instance) {
+    delete map[id];
+  } else {
+    map[id] = instance;
+  }
+}
 export default {
   name: "DesignPreview",
-  components: { Container, Draggable, DesignPreviewItem, DesignPreviewController },
+  components: { Container, Draggable, DesignPreviewItem, DesignPreviewController, DesignEditorItem, DesignEditorAddComponent },
   props: {
     className: String,
     prefix: {
@@ -57,7 +89,7 @@ export default {
     footer: Object,
     appendableComponents: {
       type: Array,
-      default: () => []
+      default: []
     },
     showAddComponentOverlay: Boolean,
     addComponentOverlayPosition: Number,
@@ -77,6 +109,14 @@ export default {
     background: {
       type: String,
       default: "#f9f9f9"
+    },
+    globalConfig: {
+      type: Object,
+      default: []
+    },
+    designComponents: {
+      type: Array,
+      default: []
     }
   },
   data() {
@@ -87,6 +127,11 @@ export default {
       DND_PREVIEW_CONTROLLER
     };
   },
+  computed: {
+    hasAppendableComponent() {
+      return this.appendableComponents.length > 0
+    }
+  },
   methods: {
     get,
     dispatchDragEnd() {
@@ -95,10 +140,16 @@ export default {
     defaultTo,
     findCom(v) {
       let valueType = v.type
-      if(this.components.length) {
-        find(this.commponents, c => {
+      if(this.designComponents.length) {
+        return find(this.commponents, c => {
           return isExpectedDesignType(c, valueType)
-        })
+        }) || {}
+      }
+      return {}
+    },
+    savePreviewItem() {
+      return (instance) => {
+        saveRef(this.editorItems, id, instance)
       }
     }
   }

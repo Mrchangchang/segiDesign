@@ -41,6 +41,7 @@ import { Input } from "ant-design-vue";
 import { Promise } from 'q';
 
 export default {
+  name: 'ConfigEditor',
   designType: "config", // 静态属性
   designDescription: "页面配置",
   getInitialValue() {

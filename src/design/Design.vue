@@ -36,7 +36,7 @@
     />
       <DesignPreview
         :prefix="prefix"
-        :components="components"
+        :designComponents="designComponents"
         :value="value"
         :validations="validations"
         :showError="showError"
@@ -163,7 +163,7 @@ export default {
     DesignPreview
   },
   props: {
-    components: {
+    designComponents: {
       type: Array,
       default: () => []
     },
@@ -278,7 +278,7 @@ export default {
     },
     // 每个组件当前已经添加的个数
     componentInstanceCount() {
-      makeInstanceCountMapFromValue(this.value, this.components);
+      makeInstanceCountMapFromValue(this.value, this.designComponents);
     }
   },
   created() {
@@ -364,8 +364,8 @@ export default {
     },
     validateComponentValue(value, prevValue, changedProps) {
       const { type } = value;
-      const { components } = this;
-      const comp = find(components, c => isExpectedDesignType(c, type));
+      const { designComponents } = this;
+      const comp = find(designComponents, c => isExpectedDesignType(c, type));
       const { validate } = comp.editor;
       const p = validate(value, prevValue, changedProps);
       return p;
@@ -426,7 +426,7 @@ export default {
     },
     // 删除一个组件
     onDelete(component) {
-      const { value, components } = this;
+      const { value, designComponents } = this;
       let nextIndex = -1;
       const newValue = value.filter((v, idx) => {
         const skip = v !== component;
@@ -443,7 +443,7 @@ export default {
       if (componentUUID === this.state.selectedUUID) {
         const nextSelectedValue = findFirstEditableSibling(
           newValue,
-          components,
+          designComponents,
           nextIndex
         );
         const nextUUID = this.getUUIDFromValue(nextSelectedValue);
@@ -457,7 +457,7 @@ export default {
       if (fromIndex === toIndex) {
         return;
       }
-      const { value, components } = this;
+      const { value, designComponents } = this;
       const newValue = [];
       let tmp;
       /**
@@ -471,7 +471,7 @@ export default {
         for (let i = 0, dragableIndex = -1; i < value.length; i++) {
           const val = value[i];
 
-          const comp = find(components, c => isExpectedDesignType(c, val.type));
+          const comp = find(designComponents, c => isExpectedDesignType(c, val.type));
           const dragable = comp && defaultTo(comp.dragable, true);
 
           if (dragable) {
@@ -495,7 +495,7 @@ export default {
         let toInsetIndex;
         for (let i = 0, dragableIndex = -1; i < value.length; i++) {
           const val = value[i];
-          const comp = find(components, c => isExpectedDesignType(c, val.type));
+          const comp = find(designComponents, c => isExpectedDesignType(c, val.type));
           const dragable = comp && defaultTo(comp.dragable, true);
           if (dragable) {
             dragableIndex++;
@@ -534,7 +534,7 @@ export default {
     //   { 'c7c72599-2ac5-41bb-9ba0-45e8178ff5a6': { content: '请填写公告内容' } }
     // ]
     validate () {
-      const { value, components } = this
+      const { value, designComponents } = this
       let _this = this
 
       return new Promise((resolve, reject) => {
@@ -542,7 +542,7 @@ export default {
           value.map(v => {
             const id = this.getUUIDFromValue(v);
             const { type } = v;
-            const comp = find(components, c => isExpectedDesignType(c, type));
+            const comp = find(designComponents, c => isExpectedDesignType(c, type));
             // 假如组件设置了 editable: false，不处罚校验
             if (!defaultTo(comp.editable, true)) {
               return Promise.resolve({ [id]: {} });

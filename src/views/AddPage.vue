@@ -4,7 +4,7 @@
     <Design :cache="true" 
     cacheId="zent-design-test"
     :confirmUnsavedLeave="false"
-    :components="grouped ? groupedComponents : components"
+    :designComponents="grouped ? groupedComponents : designComponents"
     :value="value"
     :onChange="onChange"
     :settings="settings"
@@ -20,7 +20,7 @@ import ConfigEditor from "../components/config/ConfigEditor";
 import configConf from "../components/config/index";
 import { type } from 'os';
 
-const components = [
+const designComponents = [
   Object.assign({}, configConf, {
     // 是否可以拖拽
     dragable: false,
@@ -67,7 +67,7 @@ export default {
       },
       global: window._global || {},
       groupedComponents,
-      components
+      designComponents
     };
   },
   methods: {
