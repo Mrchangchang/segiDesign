@@ -31,6 +31,21 @@
             :previewProps="getAdditionalProps(findCom(v).previewProps, v)">
             </DesignPreviewController>
             <DesignEditorItem v-if="getUUIDFromValue(v) === selectedUUID && !showAddComponentOverlay"
+            :prefix="prefix" :disabled="disabled" :ref="savePreviewItem(getUUIDFromValue(v))">
+              <component :is="findCom(v).editor.name" 
+              :ref="savePreviewItem(getUUIDFromValue(v))"
+              :value="v"
+              :onChange="onComponentValueChange(v)"
+              :settings="settings"
+              :onSettingsChange="onSettingsChange"
+              :globalConfig = "globalConfig"
+              :design= "design"
+              :validation="validations[id]"
+              :showError="showError"
+              :design="design"
+              v-bind="getAdditionalProps(comp.editorProps, v)"/>
+            </DesignEditorItem>
+            <DesignEditorItem v-if="getUUIDFromValue(v) === selectedUUID && showAddComponentOverlay"
             :ref="savePreviewItem(getUUIDFromValue(v))"
             :prefix="prefix"
             :class="[`${prefix}-design-add-component-overlay`,
