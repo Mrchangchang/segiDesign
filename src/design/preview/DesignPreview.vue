@@ -14,8 +14,8 @@
           <DesignPreviewItem v-for="v in value" :key="getUUIDFromValue(v)" :id="getUUIDFromValue(v)" 
           :ref="savePreviewItem(getUUIDFromValue(v))">
             <DesignPreviewController :value="v" :globalConfig="globalConfig" :settings="settings" 
-            :design="design" :id="getUUIDFromValue(v)" :index="defaultTo(findCom(v).dragable, true) ? draggableIndex++ : -1"
-            :allowHoverEffects="!isDraggingOver" :dragable="dragable" 
+            :design="design" :id="getUUIDFromValue(v)" :index="getIndex(defaultTo(findCom(v).dragable, true))"
+            :allowHoverEffects="true" :dragable="defaultTo(findCom(v).dragable, true)" 
             :editable="defaultTo(findCom(v).editable, true)" 
             :configurable="defaultTo(findCom(v).configurable, true)"
             :canDelete="defaultTo(findCom(v).canDelete, true)"
@@ -32,17 +32,16 @@
             </DesignPreviewController>
             <DesignEditorItem v-if="getUUIDFromValue(v) === selectedUUID && !showAddComponentOverlay"
             :prefix="prefix" :disabled="disabled" :ref="savePreviewItem(getUUIDFromValue(v))">
-              <component :is="findCom(v).editor.name" 
+              <component :is="findCom(v).editor && findCom(v).editor.name" 
               :ref="savePreviewItem(getUUIDFromValue(v))"
               :value="v"
               :onChange="onComponentValueChange(v)"
               :settings="settings"
               :onSettingsChange="onSettingsChange"
               :globalConfig = "globalConfig"
-              :design= "design"
+              :design="design"
               :validation="validations[id]"
               :showError="showError"
-              :design="design"
               v-bind="getAdditionalProps(comp.editorProps, v)"/>
             </DesignEditorItem>
             <DesignEditorItem v-if="getUUIDFromValue(v) === selectedUUID && showAddComponentOverlay"
@@ -88,6 +87,13 @@ function saveRef(map, id, instance) {
     map[id] = instance;
   }
 }
+
+function getAdditionalProps(propsOrFn, value) {
+  const props = isFunction(propsOrFn) ? propsOrFn(value) : propsOrFn;
+
+  return props || {};
+}
+
 export default {
   name: "DesignPreview",
   components: { Container, Draggable, DesignPreviewItem, DesignPreviewController, DesignEditorItem, DesignEditorAddComponent },
@@ -158,15 +164,25 @@ export default {
       if(this.designComponents.length) {
         return find(this.commponents, c => {
           return isExpectedDesignType(c, valueType)
-        }) || {}
+        }) || {name:''}
       }
-      return {}
+      return {name:''}
     },
     savePreviewItem() {
       return (instance) => {
         saveRef(this.editorItems, id, instance)
       }
-    }
+    },
+    getIndex (draggable) {
+      if (!this.index) this.index = 0
+      if (draggable) {
+        this.index ++
+        return this.index
+      } else {
+        return -1
+      }
+    },
+    getAdditionalProps
   }
 };
 </script>
