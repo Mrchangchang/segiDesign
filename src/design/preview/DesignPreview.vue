@@ -40,9 +40,9 @@
               :onSettingsChange="onSettingsChange"
               :globalConfig = "globalConfig"
               :design="design"
-              :validation="validations[id]"
+              :validation="validations[getUUIDFromValue(v)]"
               :showError="showError"
-              v-bind="getAdditionalProps(comp.editorProps, v)"/>
+              v-bind="getAdditionalProps(findCom(v).editorProps, v)"/>
             </DesignEditorItem>
             <DesignEditorItem v-if="getUUIDFromValue(v) === selectedUUID && showAddComponentOverlay"
             :ref="savePreviewItem(getUUIDFromValue(v))"
@@ -138,7 +138,10 @@ export default {
     designComponents: {
       type: Array,
       default: []
-    }
+    },
+    onComponentValueChange: Function,
+    validations: Object,
+    showError: Boolean
   },
   data() {
     return {

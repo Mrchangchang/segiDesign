@@ -2,12 +2,6 @@
   <Draggable v-if="dragable">
     <div :class="getClassName(allowHoverEffects && highlightWhenSelect)" @click="onSelect">
       <div
-        :ref="provided.innerRef"
-        :style="{...provided.draggableProps.style,backgroundColor: get(
-                    settings,
-                    'previewBackground',
-                    DEFAULT_BACKGROUND
-                  )}"
         :class="`${prefix}-design-preview-controller__drag-handle`"
       >
         <slot :slot-scope="{...previewProps,value, design, globalConfig, settings}"></slot>
@@ -107,7 +101,8 @@ export default {
   data() {
     return {
       provided: {},
-      snapshot: {}
+      snapshot: {},
+      DEFAULT_BACKGROUND
     };
   },
   computed: {
@@ -121,10 +116,10 @@ export default {
     getClassName(highlight) {
       return {
         [`${this.prefix}-design-preview-controller`]: true,
-        [`${prefix}-design-preview-controller--editable`]: this.editable,
-        [`${prefix}-design-preview-controller--selected`]: this.isSelected,
-        [`${prefix}-design-preview-controller--highlight`]: highlight,
-        [`${prefix}-design-preview-controller--dragable`]: this.dragable
+        [`${this.prefix}-design-preview-controller--editable`]: this.editable,
+        [`${this.prefix}-design-preview-controller--selected`]: this.isSelected,
+        [`${this.prefix}-design-preview-controller--highlight`]: highlight,
+        [`${this.prefix}-design-preview-controller--dragable`]: this.dragable
       };
     }
   },
@@ -154,7 +149,8 @@ export default {
     const { value } = this.props;
     const cb = this.props[action];
     cb && cb(value, ...args);
-  }
+  },
+  get
 };
 </script>
 
