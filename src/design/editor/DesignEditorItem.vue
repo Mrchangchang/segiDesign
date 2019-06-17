@@ -1,6 +1,6 @@
 <template>
     <div :class="[`${prefix}segi-design-editor-item`, className]" ref="editor">
-        <div v-if="disable" :class="`${prefix}-design__disabled-mask`">{{children}}</div>
+        <div v-if="disabled" :class="`${prefix}-design__disabled-mask`">{{children}}</div>
     </div>
 </template>
 

@@ -1,9 +1,7 @@
 <template>
   <Draggable v-if="dragable">
     <div :class="getClassName(allowHoverEffects && highlightWhenSelect)" @click="onSelect">
-      <div
-        :class="`${prefix}-design-preview-controller__drag-handle`"
-      >
+      <div :class="`${prefix}-design-preview-controller__drag-handle`">
         <slot :slot-scope="{...previewProps,value, design, globalConfig, settings}"></slot>
       </div>
       {{provided.placeholder}}
@@ -76,13 +74,13 @@ export default {
     // Design 组件的全局配置
     settings: Object,
     // 选中的回调函数
-    onSelect: Function,
+    // onSelect: Function,
     // 编辑的回调函数
     onEdit: Function,
     // 添加新组件的回调函数
     onAdd: Function,
     // 删除组件的回调函数
-    onDelete: Function,
+    // onDelete: Function,
     // 拖拽时移动组件的回调函数
     onMove: Function,
     // design 组件暴露的方法
@@ -121,12 +119,11 @@ export default {
         [`${this.prefix}-design-preview-controller--highlight`]: highlight,
         [`${this.prefix}-design-preview-controller--dragable`]: this.dragable
       };
-    }
-  },
-  onSelect(evt) {
-    const { editable } = this.props;
+    },
+    onSelect(evt) {
+    const { editable } = this;
     if (!editable) return;
-    this.invokeCallback("onSelect", evt, false);
+    this.$emit("onSelect", evt, false);
   },
   onPrepend() {
     this.invokeCallback("onAdd", evt, true, ADD_COMPONENT_OVERLAY_POSITION.TOP);
@@ -151,6 +148,8 @@ export default {
     cb && cb(value, ...args);
   },
   get
+  },
+  
 };
 </script>
 
