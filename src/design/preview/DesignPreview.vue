@@ -30,8 +30,10 @@
             :component="findCom(v).preview"
             :previewProps="getAdditionalProps(findCom(v).previewProps, v)">
             </DesignPreviewController>
+            {{findCom(v).editor.name}}
             <DesignEditorItem v-if="getUUIDFromValue(v) === selectedUUID && !showAddComponentOverlay"
             :prefix="prefix" :disabled="disabled" :ref="savePreviewItem(getUUIDFromValue(v))">
+            
               <component :is="findCom(v).editor && findCom(v).editor.name" 
               :ref="savePreviewItem(getUUIDFromValue(v))"
               :value="v"
@@ -165,7 +167,7 @@ export default {
     findCom(v) {
       let valueType = v.type
       if(this.designComponents.length) {
-        return find(this.commponents, c => {
+        return find(this.designComponents, c => {
           return isExpectedDesignType(c, valueType)
         }) || {name:''}
       }

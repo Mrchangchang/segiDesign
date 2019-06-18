@@ -1,6 +1,6 @@
 <template>
-  <div class="{`${prefix}-design-component-config-preview`}">
-    <div class="{`${prefix}-design-component-config-preview__title`}">{value.title}</div>
+  <div :class="`${prefix}-design-component-config-preview`">
+    <div :class="`${prefix}-design-component-config-preview__title`">{value.title}</div>
   </div>
 </template>
 <script>

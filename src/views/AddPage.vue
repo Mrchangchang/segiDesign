@@ -18,7 +18,6 @@ import Vue from 'vue'
 import Design from '../design/index'
 import ConfigEditor from "../components/config/ConfigEditor";
 import configConf from "../components/config/index";
-import { type } from 'os';
 
 const designComponents = [
   Object.assign({}, configConf, {
