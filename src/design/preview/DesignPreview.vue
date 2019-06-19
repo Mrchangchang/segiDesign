@@ -112,7 +112,7 @@ export default {
     footer: Object,
     appendableComponents: {
       type: Array,
-      default: []
+      default: () => []
     },
     showAddComponentOverlay: Boolean,
     addComponentOverlayPosition: Number,
@@ -135,11 +135,11 @@ export default {
     },
     globalConfig: {
       type: Object,
-      default: []
+      default: () => []
     },
     designComponents: {
       type: Array,
-      default: []
+      default: () => []
     },
     onComponentValueChange: Function,
     validations: Object,

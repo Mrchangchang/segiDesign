@@ -2,7 +2,8 @@
   <Draggable v-if="dragable">
     <div :class="getClassName(allowHoverEffects && highlightWhenSelect)" @click="onSelect">
       <div :class="`${prefix}-design-preview-controller__drag-handle`">
-        <slot :slot-scope="{...previewProps,value, design, globalConfig, settings}"></slot>
+        {{component}}
+        <component :is="component.name"/>
       </div>
       {{provided.placeholder}}
       <div v-if="configurable && canDelete">
@@ -23,7 +24,9 @@
     <div
       :class="[`${prefix}-design-preview-controller__drag-handle`, `${prefix}-design-preview-controller__drag-handle--inactive`]"
     >
-      <slot :slot-scope="{...previewProps,value, design, globalConfig, settings}"></slot>
+      <!-- <slot :slot-scope="{...previewProps,value, design, globalConfig, settings}"></slot> -->
+       {{component.name}}
+      <component :is="component.name"/>
     </div>
     <div v-if="configurable && canDelete">
       删除组件
@@ -86,7 +89,7 @@ export default {
     // design 组件暴露的方法
     design: Object,
     // 用来渲染预览的组件
-    component: Function,
+    component: Object,
     // 自定义配置
     globalConfig: Object,
     // preview 额外的 props

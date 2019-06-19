@@ -17,6 +17,7 @@
 import Vue from 'vue'
 import Design from '../design/index'
 import ConfigEditor from "../components/config/ConfigEditor";
+import ConfigPreview from '../components/config/ConfigPreview'
 import configConf from "../components/config/index";
 
 const designComponents = [
@@ -47,7 +48,7 @@ const groupedComponents = [
 ]
 
 Vue.component(ConfigEditor.name, ConfigEditor) // 全局注册
-
+Vue.component(ConfigEditor.name, ConfigEditor )
 export default {
   components: {
     Design
