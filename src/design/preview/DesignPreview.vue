@@ -30,7 +30,6 @@
             :component="findCom(v).preview"
             :previewProps="getAdditionalProps(findCom(v).previewProps, v)">
             </DesignPreviewController>
-            {{findCom(v).editor.name}}
             <DesignEditorItem v-if="getUUIDFromValue(v) === selectedUUID && !showAddComponentOverlay"
             :prefix="prefix" :disabled="disabled" :ref="savePreviewItem(getUUIDFromValue(v))">
             

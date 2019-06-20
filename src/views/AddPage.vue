@@ -48,7 +48,7 @@ const groupedComponents = [
 ]
 
 Vue.component(ConfigEditor.name, ConfigEditor) // 全局注册
-Vue.component(ConfigEditor.name, ConfigEditor )
+Vue.component(ConfigPreview.name, ConfigPreview )
 export default {
   components: {
     Design
@@ -83,3 +83,6 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+@import url('../assets/index.scss');
+</style>

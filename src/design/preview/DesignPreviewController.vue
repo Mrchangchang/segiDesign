@@ -2,8 +2,7 @@
   <Draggable v-if="dragable">
     <div :class="getClassName(allowHoverEffects && highlightWhenSelect)" @click="onSelect">
       <div :class="`${prefix}-design-preview-controller__drag-handle`">
-        {{component}}
-        <component :is="component.name"/>
+        <component :is="component.name" v-bind="$props"/>
       </div>
       {{provided.placeholder}}
       <div v-if="configurable && canDelete">
@@ -25,10 +24,9 @@
       :class="[`${prefix}-design-preview-controller__drag-handle`, `${prefix}-design-preview-controller__drag-handle--inactive`]"
     >
       <!-- <slot :slot-scope="{...previewProps,value, design, globalConfig, settings}"></slot> -->
-       {{component.name}}
-      <component :is="component.name"/>
+      <component :is="component.name" v-bind="$props"/>
     </div>
-    <div v-if="configurable && canDelete">
+    <div v-if="configurable && canDelete" >
       删除组件
       <button>删除</button>
     </div>
