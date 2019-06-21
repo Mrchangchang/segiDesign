@@ -1,8 +1,8 @@
 <template>
     <div :class="[`${prefix}segi-design-editor-item`, className]" ref="editor">
         <div v-if="disabled" :class="`${prefix}-design__disabled-mask`">
-            <slot></slot>
         </div>
+        <slot></slot>
     </div>
 </template>
 

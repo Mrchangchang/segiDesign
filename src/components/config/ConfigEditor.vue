@@ -102,4 +102,42 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+@import '~../../design/styles/design/_theme-default.scss';
 
+.segi-design-component-config-editor {
+  &__background {
+    .segi-design-editor__control-group-control {
+      .segi-design-component-config-editor__background-control {
+        display: flex;
+
+        .segi-input-wrapper {
+          flex-grow: 1;
+        }
+
+        .segi-btn {
+          margin-left: 10px;
+        }
+      }
+
+      .segi-design-component-config-editor__background-hint {
+        margin-top: 5px;
+        color: $theme-stroke-3;
+      }
+    }
+  }
+
+  &__tag {
+    a {
+      text-decoration: none;
+    }
+
+    &-create {
+      margin-left: 5px;
+      padding-left: 5px;
+      border-left: 1px solid $theme-stroke-6;
+    }
+  }
+}
+
+</style>

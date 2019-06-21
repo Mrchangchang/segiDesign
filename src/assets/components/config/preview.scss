@@ -8,8 +8,7 @@
   background-image: url('https://img.yzcdn.cn/public_files/2017/10/24/12e73dca6848e7977396a6fa123b9140.png');
   background-repeat: no-repeat;
   background-size: contain;
-
-  &.__title {
+  &__title {
     display: inline-block;
     padding: 23px 40px 0 60px;
     height: $preview-header-height;
